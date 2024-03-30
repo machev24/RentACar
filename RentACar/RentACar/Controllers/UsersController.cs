@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RentACar.Data.Entities;
 using RentACar.Data.Mapping;
-using RentACar.Models;
+using RentACar.Data.Models;
 
 namespace RentACar.Controllers
 {

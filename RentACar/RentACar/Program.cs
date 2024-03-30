@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RentACar.Data;
 using System.Diagnostics;
 using System;
+using RentACar.Data.Entities;
 
 namespace RentACar
 {

@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RentACar.Data.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RentACar.Data.Entities
+namespace RentACar.Data.Services.Entities
 {
-    public class Request
+    public class RequestServiceModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
@@ -19,7 +20,6 @@ namespace RentACar.Data.Entities
 
         public Car Car { get; set; }
 
-        [Required]
         public string UserId { get; set; }
 
         public User User { get; set; }

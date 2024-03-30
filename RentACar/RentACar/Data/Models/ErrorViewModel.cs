@@ -1,4 +1,4 @@
-namespace RentACar.Models
+namespace RentACar.Data.Models
 {
     public class ErrorViewModel
     {

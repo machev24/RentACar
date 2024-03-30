@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using RentACar.Data.Entities;
 using RentACar.Data.Mapping;
+using RentACar.Data.Services.Entities;
 
-namespace RentACar.Models
+namespace RentACar.Data.Models
 {
     public class UserListingViewModel : IHaveCustomMapping
     {

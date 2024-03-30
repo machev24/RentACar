@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using RentACar.Data.Entities
+@using RentACar.Data.Mapping
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> userManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,6 +31,36 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
+                        <!-- User -->
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown-menu-events" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Events</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown-menu-events">
+                                    <a class="nav-link text-dark" asp-controller="Cars" asp-action="All">Cars</a>
+
+                                    <!-- Admin / Create Event -->
+                                    @if (User.IsInRole(GlobalConstants.AdminRoleName))
+                                    {
+                                        <a class="nav-link text-dark" asp-controller="Events" asp-action="Create">Create Event</a>
+                                    }
+
+                                </div>
+                            </li>
+                        }
+
+                        <!-- Admin / Orders -->
+                        @if (User.IsInRole(GlobalConstants.AdminRoleName))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Requests" asp-action="Index">Requests</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Users</a>
+                            </li>
+                        }
+
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

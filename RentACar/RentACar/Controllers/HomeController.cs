@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using RentACar.Models;
+using RentACar.Data.Models;
 using System.Diagnostics;
 
 namespace RentACar.Controllers
