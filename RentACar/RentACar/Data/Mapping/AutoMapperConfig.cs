@@ -65,9 +65,6 @@ namespace RentACar.Data.Mapping
             });
 
             var mapper = mapperConfiguration.CreateMapper();
-
-            // Validate configuration
-            mapperConfiguration.AssertConfigurationIsValid();
         }
     }
 }

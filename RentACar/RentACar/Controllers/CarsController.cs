@@ -26,7 +26,7 @@ namespace RentACar.Controllers
         }
 
         // GET: Cars/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? id)
         {
             if (id == null)
             {
@@ -66,7 +66,7 @@ namespace RentACar.Controllers
         }
 
         // GET: Cars/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
             {
@@ -86,7 +86,7 @@ namespace RentACar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,Year,PassengerSeats,Description,PricePerDay")] Car car)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Brand,Model,Year,PassengerSeats,Description,PricePerDay")] Car car)
         {
             if (id != car.Id)
             {
@@ -117,7 +117,7 @@ namespace RentACar.Controllers
         }
 
         // GET: Cars/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
             {
@@ -137,7 +137,7 @@ namespace RentACar.Controllers
         // POST: Cars/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var car = await _context.Cars.FindAsync(id);
             if (car != null)
@@ -149,7 +149,7 @@ namespace RentACar.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CarExists(int id)
+        private bool CarExists(string id)
         {
             return _context.Cars.Any(e => e.Id == id);
         }

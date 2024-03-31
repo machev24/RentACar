@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using RentACar.Data.Entities
 @using RentACar.Data.Mapping
-@inject SignInManager<User> SignInManager
+@inject SignInManager<User> signInManager
 @inject UserManager<User> userManager
 
 <!DOCTYPE html>
@@ -33,7 +33,7 @@
                         </li>
 
                         <!-- User -->
-                        @if (SignInManager.IsSignedIn(User))
+                        @if (signInManager.IsSignedIn(User))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown-menu-events" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Events</a>
