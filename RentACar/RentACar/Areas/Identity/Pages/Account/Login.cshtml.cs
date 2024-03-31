@@ -35,8 +35,7 @@ namespace RentACar.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            public string UserName { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
@@ -70,7 +69,7 @@ namespace RentACar.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -92,6 +91,7 @@ namespace RentACar.Areas.Identity.Pages.Account
                 }
             }
 
+            // If we got this far, something failed, redisplay form
             return Page();
         }
     }

@@ -39,25 +39,20 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown-menu-events" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cars</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown-menu-events">
                                     <a class="nav-link text-dark" asp-controller="Cars" asp-action="All">Cars</a>
-
-                                    <!-- Admin / Create Event -->
-                                    @if (User.IsInRole(GlobalConstants.AdminRoleName))
-                                    {
-                                        <a class="nav-link text-dark" asp-controller="Cars" asp-action="Create">Create Car</a>
-                                    }
-
                                 </div>
                             </li>
                         }
 
-                        <!-- Admin / Requests -->
+                        <!-- Admin -->
                         @if (User.IsInRole(GlobalConstants.AdminRoleName))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Requests" asp-action="Index">Requests</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Users</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown-menu-admin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown-menu-admin">
+                                    <a class="nav-link text-dark" asp-controller="Cars" asp-action="Create">Create Car</a>
+                                    <a class="nav-link text-dark" asp-controller="Requests" asp-action="Index">Requests</a>
+                                    <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Users</a>
+                                </div>
                             </li>
                         }
 
