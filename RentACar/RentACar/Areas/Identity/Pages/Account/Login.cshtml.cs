@@ -2,12 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using RentACar.Data.Entities;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RentACar.Areas.Identity.Pages.Account
 {
@@ -15,11 +11,13 @@ namespace RentACar.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<User> _userManager;
 
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -73,6 +71,23 @@ namespace RentACar.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // Retrieve the user by email
+                    var user = await _userManager.FindByNameAsync(Input.UserName);
+
+                    // Retrieve roles for the user
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    // Check if the user is an admin
+                    if (roles.Contains("Admin"))
+                    {
+                        TempData["IsAdmin"] = true; // Set a flag indicating admin login
+                    }
+                    else
+                    {
+                        TempData["IsAdmin"] = false; // Set a flag indicating regular user login
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
