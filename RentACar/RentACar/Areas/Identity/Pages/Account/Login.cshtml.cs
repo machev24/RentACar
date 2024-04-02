@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RentACar.Data.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace RentACar.Areas.Identity.Pages.Account
 {
