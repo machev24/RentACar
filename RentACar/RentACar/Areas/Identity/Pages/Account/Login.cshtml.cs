@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,17 +8,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RentACar.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly ILogger<LoginModel> _logger;
-        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> signInManager;
+        private readonly ILogger<LoginModel> logger;
 
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
         {
-            _signInManager = signInManager;
-            _logger = logger;
-            _userManager = userManager;
+            this.signInManager = signInManager;
+            this.logger = logger;
         }
 
         [BindProperty]
@@ -33,9 +33,14 @@ namespace RentACar.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            public string UserName { get; set; }
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+                MinimumLength = 3)]
+            [RegularExpression(@"^[\w_\-.*~]{3,}$")]
+            public string Username { get; set; }
 
             [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+                MinimumLength = 5)]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -43,71 +48,76 @@ namespace RentACar.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        // GET
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
-            if (!string.IsNullOrEmpty(ErrorMessage))
+            returnUrl = returnUrl ?? this.Url.Content("~/");
+
+            if (this.User.Identity.IsAuthenticated)
             {
-                ModelState.AddModelError(string.Empty, ErrorMessage);
+                return this.LocalRedirect(returnUrl);
             }
 
-            returnUrl ??= Url.Content("~/");
+            if (!string.IsNullOrEmpty(this.ErrorMessage))
+            {
+                this.ModelState.AddModelError(string.Empty, this.ErrorMessage);
+            }
 
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            returnUrl = returnUrl ?? this.Url.Content("~/");
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            // Clear the existing external cookie to ensure a clean login process
+            await this.HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            ReturnUrl = returnUrl;
+            this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            this.ReturnUrl = returnUrl;
+
+            return this.Page();
         }
 
+        // POST
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            returnUrl = returnUrl ?? this.Url.Content("~/");
 
-            if (ModelState.IsValid)
+            if (this.User.Identity.IsAuthenticated)
             {
-                var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                return this.LocalRedirect(returnUrl);
+            }
+
+            if (this.ModelState.IsValid)
+            {
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await this.signInManager.PasswordSignInAsync(this.Input.Username, this.Input.Password,
+                    this.Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-
-                    // Retrieve the user by email
-                    var user = await _userManager.FindByNameAsync(Input.UserName);
-
-                    // Retrieve roles for the user
-                    var roles = await _userManager.GetRolesAsync(user);
-
-                    // Check if the user is an admin
-                    if (roles.Contains("Admin"))
-                    {
-                        TempData["IsAdmin"] = true; // Set a flag indicating admin login
-                    }
-                    else
-                    {
-                        TempData["IsAdmin"] = false; // Set a flag indicating regular user login
-                    }
-
-                    return LocalRedirect(returnUrl);
+                    this.logger.LogInformation("User logged in.");
+                    return this.LocalRedirect(returnUrl);
                 }
+
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return this.RedirectToPage("./LoginWith2fa",
+                        new { ReturnUrl = returnUrl, RememberMe = this.Input.RememberMe });
                 }
+
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
+                    this.logger.LogWarning("User account locked out.");
+                    return this.RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
+                    this.ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return this.Page();
                 }
             }
 
             // If we got this far, something failed, redisplay form
-            return Page();
+            return this.Page();
         }
     }
 }
