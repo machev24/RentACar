@@ -1,53 +1,34 @@
-﻿@model IEnumerable<RentACar.Data.Entities.Request>
+﻿@model IEnumerable<RequestListingViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "All Requests";
+    const string dateFormat = "dd-MMM-yyyy hh:mm:ss";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<h2>Requests</h2>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Car)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Car.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+    <tr>
+        <th>#</th>
+        <th>Car Brand</th>
+        <th>Car Model</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Customer</th>
+        <th>Ordered On</th>
+    </tr>
+
+    @{
+        var requests = Model as RequestListingViewModel[] ?? Model.ToArray();
+        for (int i = 0; i < requests.Length; i++)
+        {
+            var request = requests[i];
+            <tr>
+                <th>@(i + 1)</th>
+                <td>@request.Car.Brand</td>
+                <td>@request.Car.Model</td>
+                <td>@request.UserName</td>
+                <td>@request.OrderedOn.ToString(dateFormat)</td>
+            </tr>
+        }
+    }
 </table>
