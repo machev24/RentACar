@@ -36,7 +36,7 @@
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown-menu-cars" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cars</a>
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown-menu-cars" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cars</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown-menu-cars">
                                     <a class="nav-link text-dark" asp-controller="Cars" asp-action="All">All Cars</a>
                                     <a class="nav-link text-dark" asp-controller="Cars" asp-action="My">My Cars</a>
@@ -50,7 +50,7 @@
                             </li>
                         }
 
-                        <!-- Admin / Orders -->
+                        <!-- Admin / Requests -->
                         @if (User.IsInRole(GlobalConstants.AdminRoleName))
                         {
                             <li class="nav-item">

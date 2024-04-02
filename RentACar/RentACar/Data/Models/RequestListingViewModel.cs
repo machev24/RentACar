@@ -10,7 +10,9 @@ namespace RentACar.Data.Models
 
         public string UserName { get; set; }
 
-        public DateTime OrderedOn { get; set; }
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
 
         public void ConfigureMapping(IMapperConfigurationExpression mapper)
         {

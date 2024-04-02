@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using RentACar.Data;
 using RentACar.Data.Entities;
 using RentACar.Data.Mapping;
 using RentACar.Data.Middleware;
-using RentACar.Data;
 using RentACar.Data.Services;
+using RentACar.Data.Services.Entities;
 
 namespace RentACar
 {
@@ -27,7 +30,8 @@ namespace RentACar
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Add AutoMapper
-            services.AddAutoMapper(typeof(StartUp));
+            services.AddAutoMapper(typeof(StartUp)); // Assuming AutoMapper configurations are in the same assembly
+            services.AddAutoMapper(typeof(MappingProfile)); // Register your mapping profile
 
             // Add Identity with custom user and role types
             services.AddIdentity<User, IdentityRole>(options =>
@@ -56,24 +60,17 @@ namespace RentACar
             services.AddRazorPages();
         }
 
-
-
         /* This method gets called by the runtime. 
            Use this method to configure the HTTP request pipeline. */
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Configure AutoMapper mappings
-            AutoMapperConfig.ConfigureMapping();
-
             if (env.IsDevelopment())
             {
-                // Development environment settings
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
             else
             {
-                // Production environment settings
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
@@ -81,20 +78,14 @@ namespace RentACar
             // Custom middleware for database seeding, roles, and admin
             app.UseSeedMiddleware();
 
-            // Redirect HTTP to HTTPS
             app.UseHttpsRedirection();
-            // Serve static files
             app.UseStaticFiles();
 
-            // Routing
             app.UseRouting();
 
-            // Authentication
             app.UseAuthentication();
-            // Authorization
             app.UseAuthorization();
 
-            // Endpoint routing
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

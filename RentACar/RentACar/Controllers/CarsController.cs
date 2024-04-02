@@ -63,10 +63,17 @@ namespace RentACar.Web.Controllers
 
             var requests = await _requestsService.GetAllForUser(userId);
 
-            var myCars = requests.Select(request => _mapper.Map<CarListingViewModel>(request.Car)).ToList();
+            var myRequests = requests.Select(request => new RequestListingViewModel
+            {
+                Car = _mapper.Map<CarListingViewModel>(request.Car), // Mapping Car entity to CarListingViewModel
+                UserName = request.User.UserName,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate
+            }).ToList();
 
-            return View(myCars);
+            return View(myRequests);
         }
+
 
         [Authorize(Roles = "Admin")]
         public IActionResult Create()

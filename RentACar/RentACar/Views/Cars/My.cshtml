@@ -14,7 +14,8 @@
         <th>Model</th>
         <th>Year</th>
         <th>Passenger Seats</th>
-        <th>Ordered On</th>
+        <th>Start Date</th>
+        <th>End Date</th>
     </tr>
 
     @{
@@ -30,7 +31,8 @@
             <td>@request.Car.Model</td>
             <td>@request.Car.Year</td>
             <td>@request.Car.PassengerSeats</td>
-            <td>@request.OrderedOn.ToString(dateFormat)</td>
+            <td>@request.StartDate.ToString(dateFormat)</td>
+            <td>@request.EndDate.ToString(dateFormat)</td>
         </tr>
     }
 </table>
