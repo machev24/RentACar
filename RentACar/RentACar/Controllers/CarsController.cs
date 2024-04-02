@@ -1,157 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using RentACar.Data;
-using RentACar.Data.Entities;
+using RentACar.Data.Models;
+using RentACar.Data.Services.Entities;
+using RentACar.Data.Services;
 
-namespace RentACar.Controllers
+namespace RentACar.Web.Controllers
 {
     public class CarsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICarsService _carsService;
+        private readonly ILogger<CarsController> _logger;
+        private readonly IMapper _mapper;
+        private readonly IRequestsService _requestsService;
 
-        public CarsController(ApplicationDbContext context)
+        public CarsController(ICarsService carsService, ILogger<CarsController> logger, IMapper mapper, IRequestsService requestsService)
         {
-            _context = context;
+            _carsService = carsService;
+            _logger = logger;
+            _mapper = mapper;
+            _requestsService = requestsService;
         }
 
-        // GET: Cars
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cars.ToListAsync());
+            var cars = await _carsService.GetAll();
+
+            var carViewModels = _mapper.Map<IEnumerable<CarListingViewModel>>(cars);
+
+            return View(carViewModels);
         }
 
-        // GET: Cars/Details/5
-        public async Task<IActionResult> Details(string? id)
+        public async Task<IActionResult> All(int? page)
         {
-            if (id == null)
+            if (!page.HasValue || page < 1)
             {
-                return NotFound();
+                page = 1;
             }
 
-            var car = await _context.Cars
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (car == null)
-            {
-                return NotFound();
-            }
+            var allCars = await _carsService.GetAll();
 
-            return View(car);
+            var allCarsList = allCars.ToList();
+
+            var cars = allCarsList
+                .OrderBy(car => car.Brand)
+                .Skip(10 * (page.Value - 1))
+                .Take(10)
+                .Select(_mapper.Map<CarListingViewModel>)
+                .ToList();
+
+            return View(new AllCarsViewModel
+            {
+                Cars = cars,
+                CurrentPage = page.Value,
+                PageCount = (int)Math.Ceiling((double)allCarsList.Count / 10)
+            });
         }
 
-        // GET: Cars/Create
+        public async Task<IActionResult> My()
+        {
+            var userId = User.Identity.Name;
+
+            var requests = await _requestsService.GetAllForUser(userId);
+
+            var myCars = requests.Select(request => _mapper.Map<CarListingViewModel>(request.Car)).ToList();
+
+            return View(myCars);
+        }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Cars/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Year,PassengerSeats,Description,PricePerDay")] Car car)
+        public async Task<IActionResult> Create(CarCreateBindingModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(car);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(car);
-        }
-
-        // GET: Cars/Edit/5
-        public async Task<IActionResult> Edit(string? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
+                return View(model);
             }
 
-            var car = await _context.Cars.FindAsync(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-            return View(car);
-        }
+            var carServiceModel = _mapper.Map<CarServiceModel>(model);
 
-        // POST: Cars/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Brand,Model,Year,PassengerSeats,Description,PricePerDay")] Car car)
-        {
-            if (id != car.Id)
-            {
-                return NotFound();
-            }
+            await _carsService.CreateAsync(carServiceModel);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(car);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CarExists(car.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(car);
-        }
+            _logger.LogInformation($"Car created: {carServiceModel.Brand} {carServiceModel.Model}", carServiceModel);
 
-        // GET: Cars/Delete/5
-        public async Task<IActionResult> Delete(string? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var car = await _context.Cars
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-
-            return View(car);
-        }
-
-        // POST: Cars/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var car = await _context.Cars.FindAsync(id);
-            if (car != null)
-            {
-                _context.Cars.Remove(car);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CarExists(string id)
-        {
-            return _context.Cars.Any(e => e.Id == id);
+            return RedirectToAction("All");
         }
     }
 }

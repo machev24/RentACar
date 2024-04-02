@@ -1,164 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using RentACar.Data;
-using RentACar.Data.Entities;
+using RentACar.Data.Models;
+using RentACar.Data.Services.Entities;
+using RentACar.Data.Services;
 
-namespace RentACar.Controllers
+namespace RentACar.Web.Controllers
 {
+    [Authorize]
     public class RequestsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRequestsService _requestsService;
+        private readonly IMapper _mapper;
 
-        public RequestsController(ApplicationDbContext context)
+        public RequestsController(IRequestsService requestsService, IMapper mapper)
         {
-            _context = context;
+            _requestsService = requestsService;
+            _mapper = mapper;
         }
 
-        // GET: Requests
+        [HttpPost]
+        public async Task<IActionResult> Create(RequestCreateBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("All", "Cars");
+            }
+
+            var serviceModel = _mapper.Map<RequestServiceModel>(model);
+
+            var result = await _requestsService.Create(serviceModel, User.Identity.Name);
+            if (!result)
+            {
+                return RedirectToAction("All", "Cars");
+            }
+
+            return RedirectToAction("My", "Cars");
+        }
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Requests.Include(r => r.Car);
-            return View(await applicationDbContext.ToListAsync());
-        }
+            var requests = (await _requestsService.GetAll())
+                .Select(_mapper.Map<RequestListingViewModel>);
 
-        // GET: Requests/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var request = await _context.Requests
-                .Include(r => r.Car)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            return View(request);
-        }
-
-        // GET: Requests/Create
-        public IActionResult Create()
-        {
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Brand");
-            return View();
-        }
-
-        // POST: Requests/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StartDate,EndDate,CarId,UserId")] Request request)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(request);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Brand", request.CarId);
-            return View(request);
-        }
-
-        // GET: Requests/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var request = await _context.Requests.FindAsync(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Brand", request.CarId);
-            return View(request);
-        }
-
-        // POST: Requests/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,StartDate,EndDate,CarId,UserId")] Request request)
-        {
-            if (id != request.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(request);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RequestExists(request.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Brand", request.CarId);
-            return View(request);
-        }
-
-        // GET: Requests/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var request = await _context.Requests
-                .Include(r => r.Car)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            return View(request);
-        }
-
-        // POST: Requests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var request = await _context.Requests.FindAsync(id);
-            if (request != null)
-            {
-                _context.Requests.Remove(request);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool RequestExists(string id)
-        {
-            return _context.Requests.Any(e => e.Id == id);
+            return View(requests);
         }
     }
 }
