@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using RentACar.Data;
 using RentACar.Data.Entities;
 using RentACar.Data.Mapping;
 using RentACar.Data.Middleware;
 using RentACar.Data.Services;
-using RentACar.Data.Services.Entities;
 
 namespace RentACar
 {

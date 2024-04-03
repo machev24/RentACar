@@ -42,7 +42,7 @@
                                     <a class="nav-link text-dark" asp-controller="Cars" asp-action="My">My Cars</a>
 
                                     <!-- Admin / Create Car -->
-                                    @if (User.IsInRole(GlobalConstants.AdminRoleName))
+                                    @if (User.IsInRole("Admin"))
                                     {
                                         <a class="nav-link text-dark" asp-controller="Cars" asp-action="Create">Create Car</a>
                                     }
@@ -51,7 +51,7 @@
                         }
 
                         <!-- Admin / Requests -->
-                        @if (User.IsInRole(GlobalConstants.AdminRoleName))
+                        @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Requests" asp-action="Index">Requests</a>
