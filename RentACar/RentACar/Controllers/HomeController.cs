@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using RentACar.Data.Models;
 using System.Diagnostics;
 
@@ -7,10 +9,12 @@ namespace RentACar.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, RoleManager<IdentityRole> roleManager)
         {
             _logger = logger;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()

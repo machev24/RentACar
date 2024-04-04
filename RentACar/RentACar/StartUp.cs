@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using RentACar.Data;
 using RentACar.Data.Entities;
-using RentACar.Data.Mapping;
 using RentACar.Data.Middleware;
 using RentACar.Data.Services;
 
@@ -28,7 +27,6 @@ namespace RentACar
 
             // Add AutoMapper
             services.AddAutoMapper(typeof(StartUp)); // Assuming AutoMapper configurations are in the same assembly
-            services.AddAutoMapper(typeof(MappingProfile)); // Register your mapping profile
 
             // Add Identity with custom user and role types
             services.AddIdentity<User, IdentityRole>(options =>
@@ -52,6 +50,9 @@ namespace RentACar
             services.AddTransient<ICarsService, CarsService>();
             services.AddTransient<IRequestsService, RequestsService>();
 
+            // Ensure roles are seeded
+            services.AddTransient<RoleSeeder>();
+
             // Add controllers and Razor Pages
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -59,7 +60,7 @@ namespace RentACar
 
         /* This method gets called by the runtime. 
            Use this method to configure the HTTP request pipeline. */
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleSeeder roleSeeder)
         {
             if (env.IsDevelopment())
             {
@@ -72,9 +73,6 @@ namespace RentACar
                 app.UseHsts();
             }
 
-            // Custom middleware for database seeding, roles, and admin
-            app.UseSeedMiddleware();
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -82,6 +80,9 @@ namespace RentACar
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Seed roles
+            roleSeeder.SeedRolesAsync(app.ApplicationServices).Wait();
 
             app.UseEndpoints(endpoints =>
             {

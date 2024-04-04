@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using RentACar.Data.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace RentACar.Areas.Identity.Pages.Account
 {
@@ -65,8 +67,7 @@ namespace RentACar.Areas.Identity.Pages.Account
             [Display(Name = "Username")]
             public string UserName { get; set; }
 
-            [Display(Name = "Register as Admin")]
-            public bool IsAdmin { get; set; }
+            public bool IsAdmin { get; set; } // Removed [Display(Name = "Register as Admin")]
         }
 
         public void OnGet(string returnUrl = null)
@@ -74,7 +75,7 @@ namespace RentACar.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string registrationType = "")
         {
             returnUrl ??= Url.Content("~/");
 
@@ -96,8 +97,8 @@ namespace RentACar.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    // Assign admin role if user registers as admin
-                    if (Input.IsAdmin)
+                    // Assign admin role if the registration type is "admin"
+                    if (registrationType == "admin")
                     {
                         await _userManager.AddToRoleAsync(user, "Admin");
                     }

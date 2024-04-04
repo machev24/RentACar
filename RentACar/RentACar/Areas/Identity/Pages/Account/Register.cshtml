@@ -55,11 +55,32 @@
                 <span asp-validation-for="Input.UserName" class="text-danger"></span>
             </div>
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <!-- Hidden input field to store registration type -->
+            <input type="hidden" id="registrationType" name="registrationType" value="" />
+
+            <!-- Buttons for registering as admin or user -->
+            <button id="registerAsAdmin" type="button" class="w-100 btn btn-lg btn-primary">Register as Admin</button>
+            <button id="registerAsUser" type="button" class="w-100 btn btn-lg btn-primary">Register as User</button>
+
+            <!-- Submit button (hidden by default) -->
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary" style="display: none;">Register</button>
         </form>
     </div>
 </div>
 
 @section Scripts {
+    <script>
+        // Function to handle admin registration
+        document.getElementById("registerAsAdmin").addEventListener("click", function() {
+            document.getElementById("registrationType").value = "admin";
+            document.getElementById("registerSubmit").click(); // Trigger form submission
+        });
+
+        // Function to handle user registration
+        document.getElementById("registerAsUser").addEventListener("click", function() {
+            document.getElementById("registrationType").value = "user";
+            document.getElementById("registerSubmit").click(); // Trigger form submission
+        });
+    </script>
     <partial name="_ValidationScriptsPartial" />
 }
