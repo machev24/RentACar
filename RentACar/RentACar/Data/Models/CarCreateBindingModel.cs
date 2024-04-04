@@ -8,7 +8,7 @@ namespace RentACar.Data.Models
     public class CarCreateBindingModel : IMapWith<CarServiceModel>
     {
         [Required]
-        [StringLength(100, MinimumLength = 4)]
+        [StringLength(100, MinimumLength = 2)]
         public string Brand { get; set; }
 
         [Required]

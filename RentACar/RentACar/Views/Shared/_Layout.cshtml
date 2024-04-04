@@ -32,7 +32,6 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
 
-                        <!-- User -->
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item dropdown">
@@ -41,10 +40,12 @@
                                     <a class="nav-link text-dark" asp-controller="Cars" asp-action="All">All Cars</a>
                                     <a class="nav-link text-dark" asp-controller="Cars" asp-action="My">My Cars</a>
 
-                                    <!-- Admin / Create Car -->
                                     @if (User.IsInRole("Admin"))
                                     {
-                                        <a class="nav-link text-dark" asp-controller="Cars" asp-action="Create">Create Car</a>
+                                        <a class="dropdown-item" asp-controller="Cars" asp-action="Create">Create Car</a>
+                                        <a class="dropdown-item" asp-controller="Cars" asp-action="Edit">Edit Car</a>
+                                        <a class="dropdown-item" asp-controller="Cars" asp-action="Delete">Delete Car</a>
+                                        <a class="dropdown-item" asp-controller="Cars" asp-action="Details">Details</a>
                                     }
                                 </div>
                             </li>
@@ -55,9 +56,6 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Requests" asp-action="Index">Requests</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Users</a>
                             </li>
                         }
                     </ul>

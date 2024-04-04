@@ -1,4 +1,4 @@
-﻿@model RentACar.Data.Entities.Car
+﻿@model CarCreateBindingModel
 
 @{
     ViewData["Title"] = "Create";
@@ -50,5 +50,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
