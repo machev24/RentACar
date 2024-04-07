@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RentACar.Data.Models;
 using RentACar.Data.Services.Entities;
 using RentACar.Data.Services;
+using RentACar.Data.Mapping;
 
 namespace RentACar.Web.Controllers
 {
@@ -32,13 +33,13 @@ namespace RentACar.Web.Controllers
             var result = await _requestsService.Create(serviceModel, User.Identity.Name);
             if (!result)
             {
-                return RedirectToAction("All", "Cars");
+                return RedirectToAction("All", "Events");
             }
 
-            return RedirectToAction("My", "Cars");
+            return RedirectToAction("My", "Events");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.AdminRoleName)]
         public async Task<IActionResult> Index()
         {
             var requests = (await _requestsService.GetAll())

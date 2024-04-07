@@ -1,7 +1,6 @@
 ﻿using RentACar.Data.Mapping;
 using RentACar.Data.Services.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentACar.Data.Models
 {
@@ -29,5 +28,15 @@ namespace RentACar.Data.Models
         [Required]
         [Display(Name = "Price Per Day")]
         public decimal PricePerDay { get; set; }
+
+        public void MapFrom(CarServiceModel entity)
+        {
+            Brand = entity.Brand;
+            Model = entity.Model;
+            Year = entity.Year;
+            PassengerSeats = entity.PassengerSeats;
+            Description = entity.Description;
+            PricePerDay = entity.PricePerDay;
+        }
     }
 }

@@ -17,26 +17,25 @@ namespace RentACar.Data.Services
 
         public async Task CreateAsync(CarServiceModel model)
         {
-            if (!this.IsEntityStateValid(model))
+            if (!IsEntityStateValid(model))
             {
-                return;
+                throw new ArgumentException("Invalid entity state.");
             }
 
             var carEntity = _mapper.Map<Car>(model);
 
-            await this.context.AddAsync(carEntity);
-
-            await this.context.SaveChangesAsync();
+            await context.Cars.AddAsync(carEntity);
+            await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<CarServiceModel>> GetAll()
         {
-            var cars = await this.context.Cars
+            var cars = await context.Cars
                 .Where(e => e.PricePerDay > 0)
                 .ProjectTo<CarServiceModel>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<CarServiceModel>>(cars);
+            return cars;
         }
     }
 
