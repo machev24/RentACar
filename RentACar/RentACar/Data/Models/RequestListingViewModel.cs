@@ -8,7 +8,7 @@ namespace RentACar.Data.Models
     {
         public CarListingViewModel Car { get; set; }
 
-        public string UserName { get; set; }
+        public UserListingViewModel User { get; set; }
 
         public DateTime StartDate { get; set; }
 
@@ -17,7 +17,7 @@ namespace RentACar.Data.Models
         public void ConfigureMapping(IMapperConfigurationExpression mapper)
         {
             mapper.CreateMap<RequestServiceModel, RequestListingViewModel>()
-                .ForMember(dest => dest.UserName, opt =>
+                .ForMember(dest => dest.User.UserName, opt =>
                     opt.MapFrom(src => src.User.UserName));
         }
     }

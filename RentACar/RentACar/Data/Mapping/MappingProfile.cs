@@ -9,11 +9,18 @@ namespace RentACar.Data.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<CarCreateBindingModel, CarServiceModel>();
-            CreateMap<CarServiceModel, Car>();
             CreateMap<Car, CarServiceModel>();
+            CreateMap<Car, CarListingViewModel>();
+            CreateMap<CarServiceModel, Car>();
             CreateMap<CarServiceModel, CarListingViewModel>();
+            CreateMap<CarCreateBindingModel, CarServiceModel>();
+           
             CreateMap<Request, RequestServiceModel>();
+            CreateMap<RequestServiceModel, Request>();
+            CreateMap<RequestServiceModel, RequestListingViewModel >();
+            CreateMap<RequestCreateBindingModel, RequestServiceModel>();
+
+            CreateMap<User, UserListingViewModel>();
         }
     }
 }

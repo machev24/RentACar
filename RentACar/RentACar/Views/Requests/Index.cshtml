@@ -22,12 +22,12 @@
         {
             var request = requests[i];
             <tr>
-                <th>@(i + 1)</th>
                 <td>@request.Car.Brand</td>
                 <td>@request.Car.Model</td>
-                <td>@request.UserName</td>
                 <td>@request.StartDate.ToString(dateFormat)</td>
                 <td>@request.EndDate.ToString(dateFormat)</td>
+                <td>@request.User.UserName</td>
+                <td>@DateTime.Now</td>
             </tr>
         }
     }
