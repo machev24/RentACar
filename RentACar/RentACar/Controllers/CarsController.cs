@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentACar.Data.Models;
+using RentACar.Data.Models.Entities;
 using RentACar.Data.Services;
-using RentACar.Data.Services.Entities;
 
 namespace RentACar.Web.Controllers
 {
@@ -59,14 +59,14 @@ namespace RentACar.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create(CarCreateBindingModel model)
+        public async Task<IActionResult> Create(CarCreateBindingModel bindingModel)
         {
-            if (!ModelState.IsValid)
+            if (!(ModelState.IsValid))
             {
                 return View();
             }
 
-            var serviceModel = _mapper.Map<CarServiceModel>(model);
+            var serviceModel = _mapper.Map<CarServiceModel>(bindingModel);
 
             await _carsService.CreateAsync(serviceModel);
 

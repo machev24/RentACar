@@ -1,5 +1,5 @@
 ﻿using RentACar.Data.Mapping;
-using RentACar.Data.Services.Entities;
+using RentACar.Data.Models.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentACar.Data.Models

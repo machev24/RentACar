@@ -9,7 +9,7 @@ using RentACar.Data.Models;
 
 namespace RentACar.Controllers
 {
-    [Authorize(Roles = GlobalConstants.AdminRoleName)]
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly UserManager<User> userManager;
@@ -28,7 +28,7 @@ namespace RentACar.Controllers
                 .ToArray();
 
             var adminIds = (await userManager
-                .GetUsersInRoleAsync(GlobalConstants.AdminRoleName))
+                .GetUsersInRoleAsync("Admin"))
                 .Select(r => r.Id)
                 .ToHashSet();
 
@@ -54,12 +54,12 @@ namespace RentACar.Controllers
 
             var user = await this.userManager.FindByIdAsync(userId);
 
-            if (user == null || await this.userManager.IsInRoleAsync(user, GlobalConstants.AdminRoleName))
+            if (user == null || await this.userManager.IsInRoleAsync(user, "Admin"))
             {
                 return this.RedirectToAction("Index");
             }
 
-            await this.userManager.AddToRoleAsync(user, GlobalConstants.AdminRoleName);
+            await this.userManager.AddToRoleAsync(user, "Admin");
 
             return this.RedirectToAction("Index");
         }
@@ -74,12 +74,12 @@ namespace RentACar.Controllers
 
             var user = await this.userManager.FindByIdAsync(userId);
 
-            if (user == null || !await this.userManager.IsInRoleAsync(user, GlobalConstants.AdminRoleName))
+            if (user == null || !await this.userManager.IsInRoleAsync(user, "Admin"))
             {
                 return this.RedirectToAction("Index");
             }
 
-            await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.AdminRoleName);
+            await this.userManager.RemoveFromRoleAsync(user, "Admin");
 
             return this.RedirectToAction("Index");
         }

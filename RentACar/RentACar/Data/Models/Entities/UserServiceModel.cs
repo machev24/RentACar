@@ -3,7 +3,7 @@ using RentACar.Data.Entities;
 using RentACar.Data.Mapping;
 using System.ComponentModel.DataAnnotations;
 
-namespace RentACar.Data.Services.Entities
+namespace RentACar.Data.Models.Entities
 {
     public class UserServiceModel : IdentityUser, IMapWith<User>
     {

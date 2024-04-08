@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RentACar.Data.Services.Entities
+namespace RentACar.Data.Models.Entities
 {
     public class CarServiceModel
     {

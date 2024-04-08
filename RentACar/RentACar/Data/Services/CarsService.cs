@@ -2,7 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using RentACar.Data.Entities;
-using RentACar.Data.Services.Entities;
+using RentACar.Data.Models.Entities;
 
 namespace RentACar.Data.Services
 {

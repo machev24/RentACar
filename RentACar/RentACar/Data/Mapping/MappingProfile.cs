@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RentACar.Data.Entities;
-using RentACar.Data.Services.Entities;
+using RentACar.Data.Models;
+using RentACar.Data.Models.Entities;
 
 namespace RentACar.Data.Mapping
 {
@@ -8,7 +9,9 @@ namespace RentACar.Data.Mapping
     {
         public MappingProfile()
         {
+            CreateMap<CarCreateBindingModel, CarServiceModel>();
             CreateMap<Car, CarServiceModel>();
+            CreateMap<CarServiceModel, CarListingViewModel>();
             CreateMap<Request, RequestServiceModel>();
         }
     }

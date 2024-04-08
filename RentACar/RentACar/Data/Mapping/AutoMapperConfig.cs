@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using System;
+using Microsoft.Extensions.DependencyInjection; // Ensure you import this namespace
 
 namespace RentACar.Data.Mapping
 {
@@ -7,7 +7,7 @@ namespace RentACar.Data.Mapping
     {
         private static bool isInitialized;
 
-        public static void ConfigureMapping()
+        public static void ConfigureMapping(IServiceCollection services)
         {
             if (isInitialized)
             {
@@ -65,6 +65,7 @@ namespace RentACar.Data.Mapping
             });
 
             var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper); 
         }
     }
 }

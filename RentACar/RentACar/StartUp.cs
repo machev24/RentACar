@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RentACar.Data;
 using RentACar.Data.Entities;
+using RentACar.Data.Mapping;
 using RentACar.Data.Middleware;
 using RentACar.Data.Services;
 
@@ -60,10 +61,11 @@ namespace RentACar
 
         /* This method gets called by the runtime. 
            Use this method to configure the HTTP request pipeline. */
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleSeeder roleSeeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleSeeder roleSeeder, ApplicationDbContext context)
         {
             if (env.IsDevelopment())
             {
+                context.Database.EnsureCreated();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }

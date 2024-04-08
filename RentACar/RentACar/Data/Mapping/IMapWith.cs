@@ -2,5 +2,6 @@
 {
     public interface IMapWith<TModel>
     {
+        //empty
     }
 }

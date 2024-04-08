@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentACar.Data.Models;
-using RentACar.Data.Services.Entities;
 using RentACar.Data.Services;
 using RentACar.Data.Mapping;
+using RentACar.Data.Models.Entities;
 
 namespace RentACar.Web.Controllers
 {
@@ -39,7 +39,7 @@ namespace RentACar.Web.Controllers
             return RedirectToAction("My", "Events");
         }
 
-        [Authorize(Roles = GlobalConstants.AdminRoleName)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var requests = (await _requestsService.GetAll())

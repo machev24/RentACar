@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using RentACar.Data.Entities;
 using RentACar.Data.Mapping;
-using RentACar.Data.Services.Entities;
+using RentACar.Data.Models.Entities;
 
 namespace RentACar.Data.Models
 {
