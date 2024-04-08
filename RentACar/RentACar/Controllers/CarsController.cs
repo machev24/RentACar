@@ -61,8 +61,17 @@ namespace RentACar.Web.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CarCreateBindingModel bindingModel)
         {
-            if (!(ModelState.IsValid))
+            if (!ModelState.IsValid)
             {
+                return View();
+            }
+
+            // Check if a car with the same properties already exists
+            var existingCar = await _carsService.GetCarByBrandAndModel(bindingModel.Brand, bindingModel.Model);
+            if (existingCar != null)
+            {
+                // If the car already exists, return a message indicating that
+                ModelState.AddModelError("", "A car with the same brand and model already exists.");
                 return View();
             }
 
@@ -70,10 +79,11 @@ namespace RentACar.Web.Controllers
 
             await _carsService.CreateAsync(serviceModel);
 
-            _logger.LogInformation("Event created: " + serviceModel.Brand, serviceModel);
+            _logger.LogInformation("Car created: " + serviceModel.Brand + " " + serviceModel.Model, serviceModel);
 
             return RedirectToAction("All");
         }
+
     }
 }
 

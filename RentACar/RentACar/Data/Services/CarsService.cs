@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using RentACar.Data.Entities;
@@ -37,6 +41,13 @@ namespace RentACar.Data.Services
 
             return cars;
         }
-    }
 
+        public async Task<CarServiceModel> GetCarByBrandAndModel(string brand, string model)
+        {
+            var carEntity = await context.Cars
+                .FirstOrDefaultAsync(c => c.Brand == brand && c.Model == model);
+
+            return _mapper.Map<CarServiceModel>(carEntity);
+        }
+    }
 }

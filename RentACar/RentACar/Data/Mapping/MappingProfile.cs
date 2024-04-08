@@ -10,6 +10,7 @@ namespace RentACar.Data.Mapping
         public MappingProfile()
         {
             CreateMap<CarCreateBindingModel, CarServiceModel>();
+            CreateMap<CarServiceModel, Car>();
             CreateMap<Car, CarServiceModel>();
             CreateMap<CarServiceModel, CarListingViewModel>();
             CreateMap<Request, RequestServiceModel>();
