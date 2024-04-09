@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "All Cars";
-    const string dateFormat = "dd MMM yyyy hh:mm";
 }
 
 <!-- Title -->
@@ -17,10 +16,8 @@
         <th>Passenger Seats</th>
         <th>Description</th>
         <th>Price Per Day</th>
-        @if (!User.IsInRole("Admin"))
-        {
-            <th>Actions</th>
-        }
+        <th>Actions</th>
+
     </tr>
 
     @{
@@ -36,6 +33,14 @@
                 <td>@n.PassengerSeats</td>
                 <td>@n.Description</td>
                 <td>@n.PricePerDay</td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a class="hp1" asp-page="/Edit" asp-route-id="@n.Id">Edit</a> |
+                        <a class="hp1" asp-page="/Details" asp-route-id="@n.Id">Details</a> |
+                        <a class="hp1" asp-page="/Delete" asp-route-id="@n.Id">Delete</a>
+                    </td>
+                }
                 @if (!User.IsInRole("Admin"))
                 {
                     <td>

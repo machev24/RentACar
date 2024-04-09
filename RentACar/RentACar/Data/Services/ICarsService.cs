@@ -7,6 +7,8 @@ namespace RentACar.Data.Services
     public interface ICarsService
     {
         Task CreateAsync(CarServiceModel model);
+        Task EditAsync(CarServiceModel model);
+        Task DeleteAsync(CarServiceModel model);
         Task<IEnumerable<CarServiceModel>> GetAll();
         Task<CarServiceModel> GetCarByBrandAndModel(string brand, string model); 
     }

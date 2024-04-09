@@ -84,6 +84,77 @@ namespace RentACar.Web.Controllers
             return RedirectToAction("All");
         }
 
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var car = await _carsService.GetByIdAsync(id);
+
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = _mapper.Map<CarEditViewModel>(car);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id, CarEditViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var existingCar = await _carsService.GetByIdAsync(id);
+            if (existingCar == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(viewModel, existingCar);
+
+            await _carsService.UpdateAsync(existingCar);
+
+            _logger.LogInformation("Car updated: " + existingCar.Brand + " " + existingCar.Model, existingCar);
+
+            return RedirectToAction("All");
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var car = await _carsService.GetByIdAsync(id);
+
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = _mapper.Map<CarDetailsViewModel>(car);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var car = await _carsService.GetByIdAsync(id);
+
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            await _carsService.DeleteAsync(id);
+
+            _logger.LogInformation("Car deleted: " + car.Brand + " " + car.Model, car);
+
+            return RedirectToAction("All");
+        }
     }
 }
 
