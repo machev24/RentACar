@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using RentACar.Data.Entities;
@@ -14,7 +10,7 @@ namespace RentACar.Data.Services
     {
         private readonly IMapper _mapper;
 
-        public CarsService(ApplicationDbContext context, IMapper mapper) : base(context)
+        public CarsService(ApplicationDbContext context, IMapper mapper): base(context)
         {
             _mapper = mapper;
         }
@@ -42,12 +38,49 @@ namespace RentACar.Data.Services
             return cars;
         }
 
+        public async Task<CarServiceModel> GetByIdAsync(string id)
+        {
+            var carEntity = await context.Cars.FindAsync(id);
+
+            return _mapper.Map<CarServiceModel>(carEntity);
+        }
+
         public async Task<CarServiceModel> GetCarByBrandAndModel(string brand, string model)
         {
             var carEntity = await context.Cars
                 .FirstOrDefaultAsync(c => c.Brand == brand && c.Model == model);
 
             return _mapper.Map<CarServiceModel>(carEntity);
+        }
+
+        public async Task UpdateAsync(CarServiceModel model)
+        {
+            if (!IsEntityStateValid(model))
+            {
+                throw new ArgumentException("Invalid entity state.");
+            }
+
+            var existingCarEntity = await context.Cars.FindAsync(model.Id);
+            if (existingCarEntity == null)
+            {
+                throw new InvalidOperationException("Car not found.");
+            }
+
+            _mapper.Map(model, existingCarEntity);
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            var carEntity = await context.Cars.FindAsync(id);
+            if (carEntity == null)
+            {
+                throw new InvalidOperationException("Car not found.");
+            }
+
+            context.Cars.Remove(carEntity);
+            await context.SaveChangesAsync();
         }
     }
 }

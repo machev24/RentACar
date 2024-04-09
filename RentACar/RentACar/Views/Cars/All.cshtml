@@ -36,10 +36,11 @@
                 @if (User.IsInRole("Admin"))
                 {
                     <td>
-                        <a class="hp1" asp-page="/Edit" asp-route-id="@n.Id">Edit</a> |
-                        <a class="hp1" asp-page="/Details" asp-route-id="@n.Id">Details</a> |
-                        <a class="hp1" asp-page="/Delete" asp-route-id="@n.Id">Delete</a>
+                        <a class="hp1" asp-controller="Cars" asp-action="Edit" asp-route-id="@n.Id">Edit</a> |
+                        <a class="hp1" asp-controller="Cars" asp-action="Details" asp-route-id="@n.Id">Details</a> |
+                        <a class="hp1" asp-controller="Cars" asp-action="Delete" asp-route-id="@n.Id">Delete</a>
                     </td>
+
                 }
                 @if (!User.IsInRole("Admin"))
                 {

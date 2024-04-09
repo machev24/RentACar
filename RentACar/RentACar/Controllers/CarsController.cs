@@ -85,7 +85,7 @@ namespace RentACar.Web.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
             var car = await _carsService.GetByIdAsync(id);
 
@@ -101,7 +101,7 @@ namespace RentACar.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, CarEditViewModel viewModel)
+        public async Task<IActionResult> Edit(string id, CarEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -124,7 +124,7 @@ namespace RentACar.Web.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
             var car = await _carsService.GetByIdAsync(id);
 
@@ -140,7 +140,7 @@ namespace RentACar.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             var car = await _carsService.GetByIdAsync(id);
 
@@ -157,4 +157,3 @@ namespace RentACar.Web.Controllers
         }
     }
 }
-

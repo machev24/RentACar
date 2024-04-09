@@ -12,7 +12,10 @@ namespace RentACar.Data.Mapping
             CreateMap<Car, CarServiceModel>();
             CreateMap<Car, CarListingViewModel>();
             CreateMap<CarServiceModel, Car>();
+            CreateMap<CarServiceModel, CarEditViewModel>();
+            CreateMap<CarEditViewModel, CarServiceModel>();
             CreateMap<CarServiceModel, CarListingViewModel>();
+            CreateMap<CarServiceModel, CarDetailsViewModel>();
             CreateMap<CarCreateBindingModel, CarServiceModel>();
            
             CreateMap<Request, RequestServiceModel>();
