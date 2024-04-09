@@ -13,7 +13,6 @@
         <th>Start Date</th>
         <th>End Date</th>
         <th>Customer</th>
-        <th>Ordered On</th>
     </tr>
 
     @{
@@ -27,7 +26,6 @@
                 <td>@request.StartDate.ToString(dateFormat)</td>
                 <td>@request.EndDate.ToString(dateFormat)</td>
                 <td>@request.User.UserName</td>
-                <td>@DateTime.Now</td>
             </tr>
         }
     }

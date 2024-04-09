@@ -33,10 +33,10 @@ namespace RentACar.Web.Controllers
             var result = await _requestsService.Create(serviceModel, User.Identity.Name);
             if (!result)
             {
-                return RedirectToAction("All", "Events");
+                return RedirectToAction("All", "Cars");
             }
 
-            return RedirectToAction("My", "Events");
+            return RedirectToAction("My", "Cars");
         }
 
         [Authorize(Roles = "Admin")]

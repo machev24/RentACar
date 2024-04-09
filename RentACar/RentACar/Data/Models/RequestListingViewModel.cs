@@ -17,8 +17,8 @@ namespace RentACar.Data.Models
         public void ConfigureMapping(IMapperConfigurationExpression mapper)
         {
             mapper.CreateMap<RequestServiceModel, RequestListingViewModel>()
-                .ForMember(dest => dest.User.UserName, opt =>
-                    opt.MapFrom(src => src.User.UserName));
+                .ForMember(dest => dest.User, opt =>
+                    opt.MapFrom(src => new UserListingViewModel { UserName = src.User.UserName }));
         }
     }
 }
