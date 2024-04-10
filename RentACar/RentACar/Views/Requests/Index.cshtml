@@ -27,6 +27,10 @@
                 <td>@request.StartDate.ToString(dateFormat)</td>
                 <td>@request.EndDate.ToString(dateFormat)</td>
                 <td>@request.User.UserName</td>
+                <td>
+                    <input type="submit" value="Accept" class="btn btn-danger" style="background-color: green; border-color: green;" />
+                    <input type="submit" value="Deny" class="btn btn-danger" />
+                </td>
             </tr>
         }
     }

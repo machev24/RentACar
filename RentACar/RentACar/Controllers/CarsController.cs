@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RentACar.Data.Models;
 using RentACar.Data.Models.Entities;
 using RentACar.Data.Services;
@@ -138,7 +139,7 @@ namespace RentACar.Web.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -149,11 +150,28 @@ namespace RentACar.Web.Controllers
                 return NotFound();
             }
 
-            await _carsService.DeleteAsync(id);
+            var viewModel = _mapper.Map<CarDeleteViewModel>(car);
 
-            _logger.LogInformation("Car deleted: " + car.Brand + " " + car.Model, car);
+            return View(viewModel);
+        }
 
-            return RedirectToAction("All");
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken] // Add this attribute for security
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            // Delete the car using the cars service
+            var deletedCar = await _carsService.DeleteAsync(id);
+
+            if (deletedCar == null)
+            {
+                // Optionally handle the case where the car was not found or couldn't be deleted
+                return NotFound();
+            }
+
+            _logger.LogInformation("Car deleted: {CarId}", deletedCar.Id);
+
+            return RedirectToAction(nameof(All)); // Redirect to the All action
         }
     }
 }

@@ -71,16 +71,19 @@ namespace RentACar.Data.Services
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task<CarServiceModel> DeleteAsync(string id)
         {
             var carEntity = await context.Cars.FindAsync(id);
-            if (carEntity == null)
+            if (carEntity != null)
             {
-                throw new InvalidOperationException("Car not found.");
-            }
+                var deletedCarModel = _mapper.Map<CarServiceModel>(carEntity); // Map the deleted car entity to CarServiceModel
 
-            context.Cars.Remove(carEntity);
-            await context.SaveChangesAsync();
+                context.Cars.Remove(carEntity);
+                await context.SaveChangesAsync();
+
+                return deletedCarModel; // Return the deleted car
+            }
+            return null; // Return null if the car was not found
         }
     }
 }

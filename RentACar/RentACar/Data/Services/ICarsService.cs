@@ -10,7 +10,7 @@ namespace RentACar.Data.Services
         Task<CarServiceModel> GetByIdAsync(string id);
         Task CreateAsync(CarServiceModel car);
         Task UpdateAsync(CarServiceModel car);
-        Task DeleteAsync(string id);
+        Task<CarServiceModel> DeleteAsync(string id);
         Task<CarServiceModel> GetCarByBrandAndModel(string brand, string model);
     }
 }
