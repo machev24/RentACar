@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using RentACar.Data.Models.Entities;
 
 namespace RentACar.Data.Services
@@ -12,5 +13,6 @@ namespace RentACar.Data.Services
         Task UpdateAsync(CarServiceModel car);
         Task<CarServiceModel> DeleteAsync(string id);
         Task<CarServiceModel> GetCarByBrandAndModel(string brand, string model);
+        Task<IEnumerable<CarServiceModel>> GetAvailableCars(DateTime startDate, DateTime endDate);
     }
 }

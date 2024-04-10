@@ -39,7 +39,7 @@ namespace RentACar.Web.Controllers
             return RedirectToAction("My", "Cars");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var requests = (await _requestsService.GetAll())

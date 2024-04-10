@@ -49,14 +49,7 @@
                                     }
                                 </div>
                             </li>
-                        }
-
-                        <!-- Admin / Requests -->
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Requests" asp-action="Index">Requests</a>
-                            </li>
+                            <a class="nav-link text-dark" asp-controller="Requests" asp-action="Index">Requests</a>
                         }
                     </ul>
                     <partial name="_LoginPartial" />

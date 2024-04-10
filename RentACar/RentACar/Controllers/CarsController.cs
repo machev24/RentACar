@@ -1,26 +1,23 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RentACar.Data.Models;
 using RentACar.Data.Models.Entities;
 using RentACar.Data.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RentACar.Web.Controllers
 {
     public class CarsController : Controller
     {
-
         private readonly ICarsService _carsService;
         private readonly IRequestsService _requestsService;
-        private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public CarsController(ICarsService carsService, ILogger<CarsController> logger,
-                       IRequestsService requestsService, IMapper mapper)
+        public CarsController(ICarsService carsService, IRequestsService requestsService, IMapper mapper)
         {
             _carsService = carsService;
-            _logger = logger;
             _requestsService = requestsService;
             _mapper = mapper;
         }
@@ -29,27 +26,16 @@ namespace RentACar.Web.Controllers
         public async Task<IActionResult> All()
         {
             var allCars = await _carsService.GetAll();
-
-            var allCarsArr = allCars as CarServiceModel[] ?? allCars.ToArray();
-
-            var cars = allCarsArr
-                .Select(_mapper.Map<CarListingViewModel>)
-                .ToArray();
-
-            return View(new AllCarsViewModel
-            {
-                Cars = cars
-            });
+            var carsViewModel = allCars.Select(_mapper.Map<CarListingViewModel>);
+            return View(carsViewModel);
         }
 
         [Authorize]
         public async Task<IActionResult> My()
         {
-            var requests = (await _requestsService
-                    .GetAllForUser(User.Identity.Name))
-                .Select(_mapper.Map<RequestListingViewModel>);
-
-            return View(requests);
+            var requests = await _requestsService.GetAllForUser(User.Identity.Name);
+            var requestViewModels = requests.Select(_mapper.Map<RequestListingViewModel>);
+            return View(requestViewModels);
         }
 
         [Authorize(Roles = "Admin")]
@@ -64,23 +50,11 @@ namespace RentACar.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
-            }
-
-            // Check if a car with the same properties already exists
-            var existingCar = await _carsService.GetCarByBrandAndModel(bindingModel.Brand, bindingModel.Model);
-            if (existingCar != null)
-            {
-                // If the car already exists, return a message indicating that
-                ModelState.AddModelError("", "A car with the same brand and model already exists.");
-                return View();
+                return View(bindingModel);
             }
 
             var serviceModel = _mapper.Map<CarServiceModel>(bindingModel);
-
             await _carsService.CreateAsync(serviceModel);
-
-            _logger.LogInformation("Car created: " + serviceModel.Brand + " " + serviceModel.Model, serviceModel);
 
             return RedirectToAction("All");
         }
@@ -89,14 +63,12 @@ namespace RentACar.Web.Controllers
         public async Task<IActionResult> Edit(string id)
         {
             var car = await _carsService.GetByIdAsync(id);
-
             if (car == null)
             {
                 return NotFound();
             }
 
             var viewModel = _mapper.Map<CarEditViewModel>(car);
-
             return View(viewModel);
         }
 
@@ -116,10 +88,7 @@ namespace RentACar.Web.Controllers
             }
 
             _mapper.Map(viewModel, existingCar);
-
             await _carsService.UpdateAsync(existingCar);
-
-            _logger.LogInformation("Car updated: " + existingCar.Brand + " " + existingCar.Model, existingCar);
 
             return RedirectToAction("All");
         }
@@ -128,14 +97,12 @@ namespace RentACar.Web.Controllers
         public async Task<IActionResult> Details(string id)
         {
             var car = await _carsService.GetByIdAsync(id);
-
             if (car == null)
             {
                 return NotFound();
             }
 
             var viewModel = _mapper.Map<CarDetailsViewModel>(car);
-
             return View(viewModel);
         }
 
@@ -144,34 +111,48 @@ namespace RentACar.Web.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var car = await _carsService.GetByIdAsync(id);
-
             if (car == null)
             {
                 return NotFound();
             }
 
             var viewModel = _mapper.Map<CarDeleteViewModel>(car);
-
             return View(viewModel);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken] // Add this attribute for security
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            // Delete the car using the cars service
             var deletedCar = await _carsService.DeleteAsync(id);
-
             if (deletedCar == null)
             {
-                // Optionally handle the case where the car was not found or couldn't be deleted
                 return NotFound();
             }
 
-            _logger.LogInformation("Car deleted: {CarId}", deletedCar.Id);
+            return RedirectToAction(nameof(All));
+        }
 
-            return RedirectToAction(nameof(All)); // Redirect to the All action
+        [Authorize]
+        public IActionResult AvailableCars()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AvailableCars(DateTime startDate, DateTime endDate)
+        {
+            if (startDate >= endDate)
+            {
+                ModelState.AddModelError("", "End Date must be greater than Start Date.");
+                return View();
+            }
+
+            var availableCars = await _carsService.GetAvailableCars(startDate, endDate);
+            var carsViewModel = availableCars.Select(_mapper.Map<CarListingViewModel>);
+            return View(carsViewModel);
         }
     }
 }

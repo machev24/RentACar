@@ -85,5 +85,18 @@ namespace RentACar.Data.Services
             }
             return null; // Return null if the car was not found
         }
+
+        public async Task<IEnumerable<CarServiceModel>> GetAvailableCars(DateTime startDate, DateTime endDate)
+        {
+            // Find cars that are not already rented for the specified date range
+            var availableCars = await context.Cars
+                .Where(car => !context.Requests
+                    .Any(request => request.CarId == car.Id &&
+                                    (startDate <= request.EndDate && endDate >= request.StartDate)))
+                .ProjectTo<CarServiceModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return availableCars;
+        }
     }
 }
