@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -11,15 +11,19 @@
     <Compile Remove="Images\**" />
     <Compile Remove="NewFolder1\**" />
     <Compile Remove="NewFolder\**" />
+    <Compile Remove="wwwroot\styles.css\**" />
     <Content Remove="Images\**" />
     <Content Remove="NewFolder1\**" />
     <Content Remove="NewFolder\**" />
+    <Content Remove="wwwroot\styles.css\**" />
     <EmbeddedResource Remove="Images\**" />
     <EmbeddedResource Remove="NewFolder1\**" />
     <EmbeddedResource Remove="NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\styles.css\**" />
     <None Remove="Images\**" />
     <None Remove="NewFolder1\**" />
     <None Remove="NewFolder\**" />
+    <None Remove="wwwroot\styles.css\**" />
   </ItemGroup>
 
   <ItemGroup>

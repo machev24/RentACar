@@ -17,7 +17,6 @@
         <th>Description</th>
         <th>Price Per Day</th>
         <th>Actions</th>
-
     </tr>
 
     @{
@@ -36,19 +35,15 @@
                 @if (User.IsInRole("Admin"))
                 {
                     <td>
-                        <a class="hp1" asp-controller="Cars" asp-action="Edit" asp-route-id="@n.Id">Edit</a> |
-                        <a class="hp1" asp-controller="Cars" asp-action="Details" asp-route-id="@n.Id">Details</a> |
-                        <a class="hp1" asp-controller="Cars" asp-action="Delete" asp-route-id="@n.Id">Delete</a>
+                        <a class="button-edit" href="@Url.Action("Edit", "Cars", new { id = n.Id })">Edit</a>
+                        <a class="button-details" href="@Url.Action("Details", "Cars", new { id = n.Id })">Details</a>
+                        <a class="button-delete" href="@Url.Action("Delete", "Cars", new { id = n.Id })">Delete</a>
                     </td>
-
                 }
                 @if (!User.IsInRole("Admin"))
                 {
                     <td>
-                        @await Html.PartialAsync("_RequestPartial", new RequestCreateBindingModel
-           {
-               CarId = n.Id
-           })
+                        @await Html.PartialAsync("_RequestPartial", new RequestCreateBindingModel { CarId = n.Id })
                     </td>
                 }
             </tr>

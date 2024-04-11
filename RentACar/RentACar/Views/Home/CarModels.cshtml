@@ -1,0 +1,56 @@
+﻿@model List<CarRentalApp.Controllers.CarModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Rental Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .car-container {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .car-details {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn-details {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-details:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Welcome to Car Rental</h1>
+        <p></p>
+        <h2 class="text-center">Choose a car model</h2>
+        <div class="row">
+
+            @foreach (var car in Model)
+            {
+                <div class="col-md-4">
+                    <div class="car-container">
+                        <div class="car-details">
+                            <h4><button class="btn btn-details" onclick="location.href='@Url.Action("Details", "Car", new { brand = car.Brand})'">@car.Brand </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>
