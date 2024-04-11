@@ -1,0 +1,48 @@
+﻿@model IEnumerable<CarListingViewModel>
+
+<h2>Available Cars</h2>
+<h3>Specify Rental Dates</h3>
+<!-- Rental date selection form -->
+<form asp-action="SpecifyDates" method="post">
+    <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Find Available Cars</button>
+</form>
+
+<!-- Display available cars -->
+<h3>Available Cars</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>Passenger Seats</th>
+            <th>Description</th>
+            <th>Price Per Day</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.Brand</td>
+                <td>@car.Model</td>
+                <td>@car.Year</td>
+                <td>@car.PassengerSeats</td>
+                <td>@car.Description</td>
+                <td>@car.PricePerDay</td>
+                <td>
+                    @await Html.PartialAsync("_RequestPartial", new RequestCreateBindingModel { CarId = car.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

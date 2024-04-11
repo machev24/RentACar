@@ -1,33 +1,12 @@
-﻿@model IEnumerable<RequestListingViewModel>
-
-@{
-    ViewData["Title"] = "All Requests";
-    const string dateFormat = "dd-MMM-yyyy hh:mm:ss";
+﻿@{
+    ViewData["Title"] = "Requests";
 }
 
-<h2>Requests</h2>
-<table class="table">
-    <tr>
-        <th>Car Brand</th>
-        <th>Car Model</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Customer</th>
-        <th>Actions</th>
-    </tr>
-
-    @{
-        var requests = Model as RequestListingViewModel[] ?? Model.ToArray();
-        for (int i = 0; i < requests.Length; i++)
-        {
-            var request = requests[i];
-            <tr>
-                <td>@request.Car.Brand</td>
-                <td>@request.Car.Model</td>
-                <td>@request.StartDate.ToString(dateFormat)</td>
-                <td>@request.EndDate.ToString(dateFormat)</td>
-                <td>@request.User.UserName</td>
-            </tr>
-        }
-    }
-</table>
+@if (User.IsInRole("Admin"))
+{
+    await Html.RenderPartialAsync("AdminRequestView");
+}
+else
+{
+    await Html.RenderPartialAsync("UserRequestView");
+}

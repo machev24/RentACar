@@ -71,16 +71,32 @@ namespace RentACar.Data.Services
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task<CarServiceModel> DeleteAsync(string id)
         {
             var carEntity = await context.Cars.FindAsync(id);
-            if (carEntity == null)
+            if (carEntity != null)
             {
-                throw new InvalidOperationException("Car not found.");
-            }
+                var deletedCarModel = _mapper.Map<CarServiceModel>(carEntity); // Map the deleted car entity to CarServiceModel
 
-            context.Cars.Remove(carEntity);
-            await context.SaveChangesAsync();
+                context.Cars.Remove(carEntity);
+                await context.SaveChangesAsync();
+
+                return deletedCarModel; // Return the deleted car
+            }
+            return null; // Return null if the car was not found
+        }
+
+        public async Task<IEnumerable<CarServiceModel>> GetAvailableCars(DateTime startDate, DateTime endDate)
+        {
+            // Find cars that are not already rented for the specified date range
+            var availableCars = await context.Cars
+                .Where(car => !context.Requests
+                    .Any(request => request.CarId == car.Id &&
+                                    (startDate <= request.EndDate && endDate >= request.StartDate)))
+                .ProjectTo<CarServiceModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return availableCars;
         }
     }
 }

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<RequestListingViewModel>
+
+@{
+    ViewData["Title"] = "All Requests";
+    const string dateFormat = "dd-MMM-yyyy hh:mm:ss";
+}
+
+<h2>Requests</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Car Brand</th>
+            <th>Car Model</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Customer</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model)
+        {
+            <tr>
+                <td>@request.Car.Brand</td>
+                <td>@request.Car.Model</td>
+                <td>@request.StartDate.ToString(dateFormat)</td>
+                <td>@request.EndDate.ToString(dateFormat)</td>
+                <td>@request.User.UserName</td>
+                <td>
+                    <input type="submit" value="Accept" class="btn btn-danger" style="background-color: green; border-color: green;" />
+                    <input type="submit" value="Deny" class="btn btn-danger" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
