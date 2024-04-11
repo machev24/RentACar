@@ -27,8 +27,15 @@ namespace RentACar.Web.Controllers
         {
             var allCars = await _carsService.GetAll();
             var carsViewModel = allCars.Select(_mapper.Map<CarListingViewModel>);
-            return View(carsViewModel);
+
+            var viewModel = new AllCarsViewModel
+            {
+                Cars = carsViewModel
+            };
+
+            return View(viewModel);
         }
+
 
         [Authorize]
         public async Task<IActionResult> My()

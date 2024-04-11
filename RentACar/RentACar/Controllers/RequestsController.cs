@@ -42,10 +42,18 @@ namespace RentACar.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var requests = (await _requestsService.GetAll())
-                .Select(_mapper.Map<RequestListingViewModel>);
+            var requests = await _requestsService.GetAll();
 
-            return View(requests);
+            if (User.IsInRole("Admin"))
+            {
+                var adminViewModels = requests.Select(_mapper.Map<RequestListingViewModel>);
+                return View("AdminRequestView", adminViewModels);
+            }
+            else
+            {
+                var userViewModels = requests.Select(_mapper.Map<CarListingViewModel>);
+                return View("UserRequestView", userViewModels);
+            }
         }
     }
 }

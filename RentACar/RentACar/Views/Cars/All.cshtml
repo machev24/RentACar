@@ -16,6 +16,10 @@
         <th>Passenger Seats</th>
         <th>Description</th>
         <th>Price Per Day</th>
+        @if (User.IsInRole("Admin"))
+        {
+            <th>Actions</th>
+        }
     </tr>
 
     @{

@@ -1,99 +1,12 @@
-﻿@model CarRequestViewModel
-
-@{
-    ViewData["Title"] = User.IsInRole("Admin") ? "All Requests" : "Available Cars";
-    const string dateFormat = "dd-MMM-yyyy hh:mm:ss";
+﻿@{
+    ViewData["Title"] = "Requests";
 }
 
-@if (!User.Identity.IsAuthenticated)
+@if (User.IsInRole("Admin"))
 {
-    <p>You need to be authenticated to view available cars.</p>
+    await Html.RenderPartialAsync("AdminRequestView");
 }
 else
 {
-    <h2>@ViewData["Title"]</h2>
-    @if (User.IsInRole("Admin"))
-    {
-        <h3>Requests</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Car Brand</th>
-                    <th>Car Model</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Customer</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var request in Model.Requests)
-                {
-                    <tr>
-                        <td>@request.Car.Brand</td>
-                        <td>@request.Car.Model</td>
-                        <td>@request.StartDate.ToString(dateFormat)</td>
-                        <td>@request.EndDate.ToString(dateFormat)</td>
-                        <td>@request.User.UserName</td>
-                        <td>
-                            <input type="submit" value="Accept" class="btn btn-danger" style="background-color: green; border-color: green;" />
-                            <input type="submit" value="Deny" class="btn btn-danger" />
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <h3>Available Cars</h3>
-        <!-- Rental date selection form -->
-        <form asp-action="AvailableCars" method="post">
-            <div class="form-group">
-                <label for="startDate">Start Date:</label>
-                <input type="date" id="startDate" name="startDate" class="form-control" required />
-            </div>
-            <div class="form-group">
-                <label for="endDate">End Date:</label>
-                <input type="date" id="endDate" name="endDate" class="form-control" required />
-            </div>
-            <button type="submit" class="btn btn-primary">Find Available Cars</button>
-        </form>
-
-        <!-- Display available cars -->
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Year</th>
-                    <th>Passenger Seats</th>
-                    <th>Description</th>
-                    <th>Price Per Day</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var car in Model.Cars)
-                {
-                    <tr>
-                        <td>@car.Brand</td>
-                        <td>@car.Model</td>
-                        <td>@car.Year.ToString(dateFormat)</td>
-                        <td>@car.PassengerSeats</td>
-                        <td>@car.Description</td>
-                        <td>@car.PricePerDay</td>
-                        <td>
-                            <form asp-action="RequestRental" method="post">
-                                <input type="hidden" name="carId" value="@car.Id" />
-                                <input type="hidden" name="startDate" value="@ViewData["StartDate"]" />
-                                <input type="hidden" name="endDate" value="@ViewData["EndDate"]" />
-                                <button type="submit" class="btn btn-success">Request Rental</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+    await Html.RenderPartialAsync("UserRequestView");
 }
