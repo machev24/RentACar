@@ -3,7 +3,7 @@
 <h2>Available Cars</h2>
 <h3>Specify Rental Dates</h3>
 <!-- Rental date selection form -->
-<form asp-action="SpecifyDates" method="post">
+<form asp-action="SpecifyDates" method="post" class="rental-form">
     <div class="form-group">
         <label for="startDate">Start Date:</label>
         <input type="date" id="startDate" name="startDate" class="form-control" required />
@@ -46,3 +46,4 @@
         }
     </tbody>
 </table>
+
