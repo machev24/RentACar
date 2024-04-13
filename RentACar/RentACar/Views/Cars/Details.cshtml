@@ -7,21 +7,44 @@
 <h1>Car Details</h1>
 
 <hr />
-<div>
-    <dl class="dl-horizontal">
-        <dt>Brand:</dt>
-        <dd>@Model.Brand</dd>
-        <dt>Model:</dt>
-        <dd>@Model.Model</dd>
-        <dt>Year:</dt>
-        <dd>@Model.Year</dd>
-        <dt>Passenger Seats:</dt>
-        <dd>@Model.PassengerSeats</dd>
-        <dt>Description:</dt>
-        <dd>@Model.Description</dd>
-        <dt>Price Per Day:</dt>
-        <dd>@Model.PricePerDay</dd>
-    </dl>
+<link rel="stylesheet" type="text/css" href="styles.css">
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" asp-route-id="@Model.Id">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Brand" class="car-label"></label>
+                <dd>@Model.Brand</dd>
+                <span asp-validation-for="Brand" class="car-error-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Model" class="car-label"></label>
+                <dd>@Model.Model</dd>
+                <span asp-validation-for="Model" class="car-error-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Year" class="car-label"></label>
+                <dd>@Model.Year</dd>
+                <span asp-validation-for="Year" class="car-error-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerSeats" class="car-label"></label>
+                <dd>@Model.PassengerSeats</dd>
+                <span asp-validation-for="PassengerSeats" class="car-error-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="car-label"></label>
+                <dd>@Model.Description</dd>
+                <span asp-validation-for="Description" class="car-error-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PricePerDay" class="car-label"></label>
+                <dd>@Model.PricePerDay</dd>
+                <span asp-validation-for="PricePerDay" class="car-error-message"></span>
+            
+        </form>
+    </div>
 </div>
 
 @section Scripts {

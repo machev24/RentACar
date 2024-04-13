@@ -144,55 +144,53 @@ footer {
     .button-edit:hover, .button-details:hover, .button-delete:hover {
         background-color: #45a049;
     }
-
-
 /* Стилизиране на формата за създаване на кола */
 
 /* Контейнер за цялата форма */
 .car-form-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f4f4f4;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Стилизиране на текстовите полета */
 .car-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 16px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
 }
 
 /* Стилизиране на бутоните */
 .car-btn {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4caf50;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 /* Стилизиране на заглавията */
 .car-label {
-    font-size: 18px;
-    font-weight: bold;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 /* Стилизиране на съобщенията за грешки */
 .car-error-message {
-    color: red;
+  color: red;
 }
 
 /* Стилизиране на целия формуляр */
 .car-form {
-    margin-top: 20px;
+  margin-top: 20px;
 }
