@@ -163,5 +163,42 @@ namespace RentACar.Web.Controllers
             var carsViewModel = availableCars.Select(_mapper.Map<CarListingViewModel>);
             return View(carsViewModel);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RequestRental(RequestCreateBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // If the model state is not valid, return a bad request response
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // Map the binding model to the service model
+                var requestServiceModel = _mapper.Map<RequestServiceModel>(model);
+
+                // Add the request asynchronously using the service
+                var createdRequest = await _requestsService.AddRequestAsync(requestServiceModel);
+
+                // Check if the request was successfully created
+                if (createdRequest != null)
+                {
+                    // If the request was successfully created, redirect to a success page or display a success message
+                    return RedirectToAction("RequestSuccess", "Home");
+                }
+                else
+                {
+                    // If the request creation failed, return a bad request response or redirect to an error page
+                    return BadRequest("Failed to create request.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Redirect to an error page or return a bad request response with an error message
+                return BadRequest("An unexpected error occurred while processing the request.");
+            }
+        }
     }
 }

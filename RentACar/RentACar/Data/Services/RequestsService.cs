@@ -63,5 +63,25 @@ namespace RentACar.Data.Services
 
             return requests;
         }
+
+        public async Task<RequestServiceModel> AddRequestAsync(RequestServiceModel requestModel)
+        {
+            if (!this.IsEntityStateValid(requestModel))
+            {
+                return null;
+            }
+
+            // Map request model to entity
+            var request = _mapper.Map<Request>(requestModel);
+
+            // Add request to context and save changes
+            await this.context.Requests.AddAsync(request);
+            await this.context.SaveChangesAsync();
+
+            // Map entity back to service model
+            var createdRequest = _mapper.Map<RequestServiceModel>(request);
+
+            return createdRequest;
+        }
     }
 }

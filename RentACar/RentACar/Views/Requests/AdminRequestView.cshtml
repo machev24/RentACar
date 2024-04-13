@@ -34,8 +34,14 @@
                     <td>@request.EndDate.ToString(dateFormat)</td>
                     <td>@request.User.UserName</td>
                     <td>
-                        <input type="submit" value="Accept" class="btn btn-danger" style="background-color: green; border-color: green;" />
-                        <input type="submit" value="Deny" class="btn btn-danger" />
+                        <form asp-controller="Requests" asp-action="Accept" method="post">
+                            <input type="hidden" name="RequestId" value="@request.Car.Id" />
+                            <button type="submit" class="btn btn-success">Accept</button>
+                        </form>
+                        <form asp-controller="Requests" asp-action="Deny" method="post">
+                            <input type="hidden" name="RequestId" value="@request.Car.Id" />
+                            <button type="submit" class="btn btn-danger">Deny</button>
+                        </form>
                     </td>
                 </tr>
             }
