@@ -16,7 +16,10 @@
         <th>Passenger Seats</th>
         <th>Description</th>
         <th>Price Per Day</th>
-        <th>Actions</th>
+        @if (User.IsInRole("Admin"))
+        {
+            <th>Actions</th>
+        }
     </tr>
 
     @{
@@ -40,16 +43,6 @@
                         <a class="button-delete" href="@Url.Action("Delete", "Cars", new { id = n.Id })">Delete</a>
                     </td>
                 }
-                
-                @if (!User.IsInRole("Admin"))
-                {
-                    <td>
-                       
-                        @await Html.PartialAsync("~/Views/Requests/_RequestPartial.cshtml", new RequestCreateBindingModel { CarId = n.Id })
-                    
-                    </td>
-                }
-
             </tr>
         }
     }

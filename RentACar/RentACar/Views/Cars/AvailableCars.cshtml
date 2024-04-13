@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CarListingViewModel>
+
+<h2>Available Cars</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Passenger Seats</th>
+                <th>Description</th>
+                <th>Price Per Day</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model)
+            {
+                <tr>
+                    <td>@car.Brand</td>
+                    <td>@car.Model</td>
+                    <td>@car.Year</td>
+                    <td>@car.PassengerSeats</td>
+                    <td>@car.Description</td>
+                    <td>@car.PricePerDay</td>
+                    <td>
+                        <form asp-action="RequestRental" method="post">
+                            <input type="hidden" name="carId" value="@car.Id" />
+                            <input type="hidden" name="startDate" value="@ViewData["StartDate"]" />
+                            <input type="hidden" name="endDate" value="@ViewData["EndDate"]" />
+                            <button type="submit" class="btn btn-success">Request Rental</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No available cars found for the specified dates.</p>
+}

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using RentACar.Data.Models;
 using RentACar.Data.Models.Entities;
 using RentACar.Data.Services;
@@ -154,7 +156,7 @@ namespace RentACar.Web.Controllers
             if (startDate >= endDate)
             {
                 ModelState.AddModelError("", "End Date must be greater than Start Date.");
-                return View();
+                return View(); // Return the view without passing any data
             }
 
             var availableCars = await _carsService.GetAvailableCars(startDate, endDate);

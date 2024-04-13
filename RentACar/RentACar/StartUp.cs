@@ -54,6 +54,9 @@ namespace RentACar
             // Ensure roles are seeded
             services.AddTransient<RoleSeeder>();
 
+            // Add logging service
+            services.AddLogging();
+
             // Add controllers and Razor Pages
             services.AddControllersWithViews();
             services.AddRazorPages();
